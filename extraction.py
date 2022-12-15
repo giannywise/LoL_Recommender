@@ -24,10 +24,9 @@ TIERS = ['DIAMOND', 'MASTER', 'GRANDMASTER', 'CHALLENGER']
 def get_sumnames():
     """
     rates for this request = 50 requests every 10 seconds
-    :return:
     """
     columns = ['summonerId', 'summonerName', 'leagueId']
-    c = 0
+    c = 0   # counter for requests
     df = pd.DataFrame()
     for t in TIERS:
         for p in range(1, 100):  # 100 requests every 2 minutes allowed p = page
@@ -37,16 +36,16 @@ def get_sumnames():
                              'RANKED_SOLO_5x5/' + t + '/I?page=' + str(p) +
                              '&api_key=' + key)
             df2 = pd.DataFrame(r.json())
-            if df2.empty == False and r.status_code == 200:
+            if df2.empty == False and r.status_code == 200: # if request is not empty and successful
                 print(t, r.status_code)
-                try:
+                try:    # if request is not empty
                     df = pd.concat([df[columns], df2[columns]], ignore_index=True)
                 except KeyError:
                     df = pd.concat([df, df2[columns]], ignore_index=True)
             else:
                 print('ERROR', t, r.status_code)
                 df.to_json(f'summoner_names{c}.json')
-        if df.shape[0] == 30000:
+        if df.shape[0] == 30000:    # if 30000 summoners are collected
             df.to_json(f'summoner_names{c}.json')
             c += 1
             print('CSV SAVED FINISHED')
@@ -136,14 +135,14 @@ def get_match_info():
             'last created file:', EXPORT_NAME
         EXPORT_NAME = f'matches/matches{c}.json'
         total_rows += 1
-        if rows < 5000:
+        if rows < 5000:  # ~5000 rows each file
             t += 1
-            if t <= 100:
+            if t <= 100:  # 100 requests every 2 minutes allowed
                 r = requests.get('https://europe.api.riotgames.com/lol/match/v5/matches/' + i + '/?api_key=' + key)
                 print('CODE:', r.status_code)
-                if r.status_code == 200:
+                if r.status_code == 200:    # if request is successful
                     df3 = pd.DataFrame([r.json()])
-                    try:
+                    try:    # if there is no data in the file
                         df2 = pd.concat([df2['info'], df3['info']], ignore_index=True)
                     except KeyError:
                         df2 = pd.concat([df2, df3['info']], ignore_index=True)
@@ -153,14 +152,14 @@ def get_match_info():
                     j += 1
                     df2.to_json(EXPORT_NAME)
                     print(EXPORT_PRINT)
-            else:
+            else:   # if 100 requests are made
                 t = 0
                 df2.to_json(EXPORT_NAME)
                 print(EXPORT_PRINT)
                 print('TIMER STARTED')
                 time.sleep(121)
                 print('TIMER ENDED')
-        else:
+        else:   # if 5000 rows are extracted
             rows = 0
             df2.to_json(EXPORT_NAME)
             print(EXPORT_PRINT)
