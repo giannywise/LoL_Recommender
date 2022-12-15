@@ -11,15 +11,6 @@ key = open('key.txt').readlines()[0]
 
 TIERS = ['MASTER', 'GRANDMASTER', 'CHALLENGER']
 
-"""
-Datenvextraktions Struktur
-
-Summoner Name --> summoner puuid --> matchhistory by puuid --> mathes by id --> grouped by champions
-"""
-key = open('key.txt').readlines()[0]
-
-TIERS = ['DIAMOND', 'MASTER', 'GRANDMASTER', 'CHALLENGER']
-
 
 def get_sumnames():
     """
