@@ -20,7 +20,7 @@ def get_sumnames():
     c = 0   # counter for requests
     df = pd.DataFrame()
     for t in TIERS:
-        for p in range(1, 100):  # 100 requests every 2 minutes allowed p = page
+        for p in range(1, 101):  # 100 requests every 2 minutes allowed p = page
             if p == 50:  # 50 request every 10 seconds allowed
                 time.sleep(11)
             r = requests.get('https://euw1.api.riotgames.com/lol/league-exp/v4/entries/'
@@ -86,7 +86,7 @@ def get_matches_history():
         if t <= 100:
             r = requests.get(
                 'https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/' + i + '/ids?type=ranked&start=0&count=25&api_key=' + key)
-            print('CODE:', r.status_code)
+            #print('CODE:', r.status_code)
             if r.status_code == 200:
                 df3 = pd.DataFrame([r.json()]).transpose()
                 df2 = pd.concat([df2, df3], ignore_index=True)
@@ -130,7 +130,7 @@ def get_match_info():
             t += 1
             if t <= 100:  # 100 requests every 2 minutes allowed
                 r = requests.get('https://europe.api.riotgames.com/lol/match/v5/matches/' + i + '/?api_key=' + key)
-                print('CODE:', r.status_code)
+                #print('CODE:', r.status_code)
                 if r.status_code == 200:    # if request is successful
                     df3 = pd.DataFrame([r.json()])
                     try:    # if there is no data in the file
